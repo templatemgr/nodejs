@@ -117,6 +117,8 @@ fi
 # Install fnm
 curl -fsSL "https://fnm.vercel.app/install" | bash -s -- --install-dir "/usr/share/node-managers/fnm" --skip-shell
 git clone --depth 1 "https://github.com/jasongin/nvs" "/usr/share/node-managers/nvs"
+git clone --depth 1 "https://github.com/devenvmgr/express-cors-api" "/usr/share/webapps/expressjs"
+[ -f "/usr/share/webapps/expressjs/.env.sample" ] && cp "/usr/share/webapps/expressjs/.env.sample" "/usr/share/webapps/expressjs/.env"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # End application
 # eval "$BASH_SET_SAVED_OPTIONS"
