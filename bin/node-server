@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+##@Version           :  202308292357-git
+# @@Author           :  Jason Hempstead
+# @@Contact          :  jason@casjaysdev.pro
+# @@License          :  LICENSE.md
+# @@ReadME           :  node-server --help
+# @@Copyright        :  Copyright: (c) 2023 Jason Hempstead, Casjays Developments
+# @@Created          :  Tuesday, Aug 29, 2023 23:57 EDT
+# @@File             :  node-server
+# @@Description      :
+# @@Changelog        :  New script
+# @@TODO             :  Better documentation
+# @@Other            :
+# @@Resource         :
+# @@Terminal App     :  no
+# @@sudo/root        :  no
+# @@Template         :  shell/bash
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# shellcheck disable=SC2016
+# shellcheck disable=SC2031
+# shellcheck disable=SC2120
+# shellcheck disable=SC2155
+# shellcheck disable=SC2199
+# shellcheck disable=SC2317
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# script variables
+APPNAME="$(basename "$0" 2>/dev/null)"
+VERSION="202308292357-git"
+RUN_USER="$USER"
+SET_UID="$(id -u)"
+SCRIPT_SRC_DIR="${BASH_SOURCE%/*}"
+NODE_SERVER_CWD="$(realpath "$PWD")"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# check for command
+__cmd_exists() { which $1 >/dev/null 2>&1 || return 1; }
+__function_exists() { builtin type $1 >/dev/null 2>&1 || return 1; }
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# custom functions
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Define Variables
+NODE_SERVER_EXIT_STATUS=0
+[ -n "$NODE_MANAGER" ] || NODE_MANAGER="fnm"
+[ -n "$NODE_VERSION" ] || NODE_VERSION="18"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Main application
+if [ "$NODE_MANAGER" = "fnm" ] && [ -d "/usr/share/node-managers/fnm" ]; then
+  PATH="/usr/share/node-managers/fnm:$PATH"
+  eval "$(fnm env)" && eval "$(fnm env --use-on-cd)"
+  fnm install $NODE_VERSION && fnm use $NODE_VERSION
+  [ -n "$(command -v node 2>/dev/null)" ] && true
+elif [ "$NODE_MANAGER" = "nvs" ] && [ -d "/usr/share/node-managers/nvs" ]; then
+  . "/usr/share/node-managers/nvs/nvs.sh"
+  nvs add $NODE_VERSION && nvs use $NODE_VERSION
+else
+  export NODE_MANAGER="system"
+  pkmgr update && pkmgr install nodejs
+fi
+[ -n "$(command -v node 2>/dev/null)" ] && true
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+[ -d "/app" ] && cd /app || { [ -d "/data/htdocs" ] && cd /data/htdocs || exit 1; }
+[ -f "$PWD/.env" ] && . "$PWD/.env" || { [ -f "$PWD/.env.dev" ] && . "$PWD/.env.dev"; }
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+[ -n "$SCRIPT" ] && [ -f "$SCRIPT" ] && SCRIPT="$(realpath "$SCRIPT")" ||
+  { [ -f "./app.js" ] && SCRIPT="./app/js"; } || { [ -f "./src/app.js" ] && SCRIPT="./src/app.js"; } ||
+  { [ -f "./src/server.js" ] && SCRIPT="./src/server.js"; } || NODE_SERVER_EXIT_STATUS=1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+node "$SCRIPT"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# End application
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# lets exit with code
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+exit $NODE_SERVER_EXIT_STATUS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# ex: ts=2 sw=2 et filetype=sh

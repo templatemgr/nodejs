@@ -3,15 +3,12 @@
 [ -n "$NODE_VERSION" ] || NODE_VERSION="18"
 if [ "$NODE_MANAGER" = "fnm" ] && [ -d "/usr/share/node-managers/fnm" ]; then
   PATH="/usr/share/node-managers/fnm:$PATH"
-  eval "$(fnm env)"
-  eval "$(fnm env --use-on-cd)"
-  fnm install $NODE_VERSION
-  fnm use $NODE_VERSION
+  eval "$(fnm env)" && eval "$(fnm env --use-on-cd)"
+  fnm install $NODE_VERSION && fnm use $NODE_VERSION
   [ -n "$(command -v node 2>/dev/null)" ] && true
 elif [ "$NODE_MANAGER" = "nvs" ] && [ -d "/usr/share/node-managers/nvs" ]; then
   . "/usr/share/node-managers/nvs/nvs.sh"
-  nvs add $NODE_VERSION
-  nvs use $NODE_VERSION
+  nvs add $NODE_VERSION && nvs use $NODE_VERSION
 else
   export NODE_MANAGER="system"
   pkmgr update && pkmgr install nodejs
