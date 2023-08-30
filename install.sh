@@ -43,7 +43,7 @@ __find_directory_relative() { find "$1"/* -not -path '*env/*' -not -path '.git*'
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Define Variables
-TEMPLATE_NAME="sample-template"
+TEMPLATE_NAME="nodejs"
 CONFIG_CHECK_FILE=""
 OVER_WRITE_INIT="yes"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
