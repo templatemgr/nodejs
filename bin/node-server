@@ -60,12 +60,24 @@ else
 fi
 [ -n "$(command -v node 2>/dev/null)" ] && true
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-[ -d "/app" ] && cd /app || { [ -d "/data/htdocs" ] && cd /data/htdocs || exit 1; }
+# Figure out directory
+[ -n "$SCRIPT" ] && [ -f "$SCRIPT" ] && SCRIPT="$(realpath "$SCRIPT")" && cd "$(dirname "$SCRIPT")" ||
+  { [ -d "/app" ] && cd /app; } || { [ -d "/data/htdocs" ] && cd /data/htdocs || false; } ||
+  { cd "/usr/share/webapps/expressjs" || false; } || exit 1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Load dotenv file
 [ -f "$PWD/.env" ] && . "$PWD/.env" || { [ -f "$PWD/.env.dev" ] && . "$PWD/.env.dev"; }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-[ -n "$SCRIPT" ] && [ -f "$SCRIPT" ] && SCRIPT="$(realpath "$SCRIPT")" ||
-  { [ -f "./app.js" ] && SCRIPT="./app/js"; } || { [ -f "./src/app.js" ] && SCRIPT="./src/app.js"; } ||
-  { [ -f "./src/server.js" ] && SCRIPT="./src/server.js"; } || NODE_SERVER_EXIT_STATUS=1
+# Find script
+{ [ -f "./app.js" ] && SCRIPT="./app.js"; } ||
+  { [ -f "./src/app.js" ] && SCRIPT="./src/app.js"; } ||
+  { [ -f "./src/server.js" ] && SCRIPT="./src/server.js"; } ||
+  { [ -f "./src/index.js" ] && SCRIPT="./src/index.js"; } ||
+  [ -f "./package.json" ] || { echo "Can not find a package.json in $PWD" && exit 1; }
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+[ -f "./package.json" ] && npm i -D
+npm i -g nodemon
+nodemon $SCRIPT
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 node "$SCRIPT"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
