@@ -41,6 +41,7 @@ __function_exists() { builtin type $1 >/dev/null 2>&1 || return 1; }
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Define Variables
+export PORT="${PORT:-$SERVICE_PORT}"
 NODE_SERVER_EXIT_STATUS=0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 [ -f "/etc/node/.env" ] && . "/etc/node/.env"
