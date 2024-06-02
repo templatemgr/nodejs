@@ -141,7 +141,7 @@ git clone --depth 1 "https://github.com/devenvmgr/express-cors-api" "/usr/share/
 echo NODE_MANAGER: $NODE_MANAGER
 echo NODE_VERSION: $NODE_VERSION
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-cat <<EOF >"/etc/node/.env"
+cat <<EOF | tee "/etc/node/.env"
 [ -n "\$NODE_MANAGER" ] || export NODE_MANAGER="\$NODE_MANAGER" 
 [ -n "\$NODE_VERSION" ] || export NODE_VERSION="\$NODE_VERSION" 
 

@@ -3,17 +3,6 @@
 [ -f "/etc/node/.env" ] && . "/etc/node/.env"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 [ -n "$NODE_MANAGER" ] || export NODE_MANAGER="fnm"
-[ -n "$NODE_VERSION" ] || export NODE_VERSION="18"
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if [ "$NODE_MANAGER" = "fnm" ] && [ -n "$(command -v fnm 2>/dev/null)" ]; then
-  export PATH="/usr/share/node-managers/fnm:$PATH"
-  eval "$(fnm env)" && eval "$(fnm env --use-on-cd)"
-  fnm use --install-if-missing $NODE_VERSION && fnm default $NODE_VERSION
-else
-  export NODE_MANAGER="system"
-  pkmgr update && pkmgr install nodejs
-fi
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-[ -n "$(command -v node 2>/dev/null)" ] && true
+[ -n "$NODE_VERSION" ] || export NODE_VERSION="22"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # end

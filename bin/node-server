@@ -38,21 +38,25 @@ __cmd_exists() { which $1 >/dev/null 2>&1 || return 1; }
 __function_exists() { builtin type $1 >/dev/null 2>&1 || return 1; }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # custom functions
-[ -f "/etc/node/.env" ] && . "/etc/node/.env"
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Define Variables
 NODE_SERVER_EXIT_STATUS=0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+[ -f "/etc/node/.env" ] && . "/etc/node/.env"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main application
 if [ "$NODE_MANAGER" = "fnm" ] && [ -n "$(command -v fnm 2>/dev/null)" ]; then
   eval "$(fnm env)" && eval "$(fnm env --use-on-cd)"
-  fnm use --install-if-missing $NODE_VERSION
+  fnm use --install-if-missing $NODE_VERSION && fnm default $NODE_VERSION
   [ -n "$(command -v node 2>/dev/null)" ] && true
 else
   export NODE_MANAGER="system"
-  pkmgr update && pkmgr install nodejs
+  pkmgr update && pkmgr install nodejs npm
 fi
-[ -n "$(command -v node 2>/dev/null)" ] && true
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+[ -n "$(command -v npm 2>/dev/null)" ] && true || { echo "Can not find npm" && exit 5; }
+[ -n "$(command -v node 2>/dev/null)" ] && true || { echo "Can not find node" && exit 6; }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Figure out directory
 [ -n "$SCRIPT" ] && [ -f "$SCRIPT" ] && SCRIPT="$(realpath "$SCRIPT")" && cd "$(dirname "$SCRIPT")" ||
@@ -74,7 +78,7 @@ fi
 echo "Node version is $(node -v | sed 's|^v||g')"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 [ -f "./package.json" ] && npm i -D >/dev/null && npm i -g nodemon >/dev/null
-[ -n "$(command -v nodemon 2>/dev/null)" ] && nodemon $SCRIPT || node "$SCRIPT" || NODE_SERVER_EXIT_STATUS=10
+[ -n "$(command -v nodemon 2>/dev/null)" ] && nodemon "$SCRIPT" || node "$SCRIPT" || NODE_SERVER_EXIT_STATUS=10
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # End application
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
