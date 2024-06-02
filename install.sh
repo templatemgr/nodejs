@@ -116,6 +116,9 @@ fi
 # custom operations
 # Install fnm
 curl -fsSL "https://fnm.vercel.app/install" | bash -s -- --install-dir "/usr/share/node-managers/fnm" --skip-shell
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+[ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 [ -z "$(command -v fnm 2>/dev/null)" ] && fnm use --install-if-missing ${NODE_VERSION:-latest} && fnm -v && eval "$(fnm env --use-on-cd)" || { echo "Failed to install fnm" && exit 1; }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # setup node
