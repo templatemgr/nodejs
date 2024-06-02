@@ -44,7 +44,7 @@ __function_exists() { builtin type $1 >/dev/null 2>&1 || return 1; }
 export PORT="${PORT:-$SERVICE_PORT}"
 NODE_SERVER_EXIT_STATUS=0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-[ -f /etc/node/init_node.sh ] && . /etc/node/init_node.sh
+[ -f "/etc/node/init_node.sh" ] && . "/etc/node/init_node.sh"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main application
 if [ "$NODE_MANAGER" = "fnm" ] && [ -n "$(command -v fnm 2>/dev/null)" ]; then

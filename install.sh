@@ -116,7 +116,7 @@ NODE_MANAGER="${NODE_MANAGER:-fnm}"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # custom operations
 [ -d "/etc/node" ] || mkdir -p /etc/node
-[ -f /etc/node/init_node.sh ] && rm -Rf /etc/node/init_node.sh
+[ -f /"etc/node/init_node.sh" ] && rm -Rf /"etc/node/init_node.sh"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Install fnm
 if [ "$NODE_MANAGER" = "fnm" ]; then
@@ -139,12 +139,11 @@ git clone --depth 1 "https://github.com/devenvmgr/express-cors-api" "/usr/share/
 echo NODE_MANAGER: $NODE_MANAGER
 echo NODE_VERSION: $NODE_VERSION
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-cat <<EOF | tee /etc/node/init_node.sh
+cat <<EOF | tee /"etc/node/init_node.sh"
 export NODE_MANAGER="$NODE_MANAGER" 
 export NODE_VERSION="$NODE_VERSION"
 if [ "\$NODE_MANAGER" = "fnm" ] && [ -n "\$(command -v fnm 2>/dev/null)" ]; then 
   eval "\$(fnm env)" && eval "\$(fnm env --use-on-cd)" 
-  echo "Node version is \$(node -v | sed 's|^v||g')"
 fi
 EOF
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
