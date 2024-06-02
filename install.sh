@@ -120,6 +120,12 @@ git clone --depth 1 "https://github.com/jasongin/nvs" "/usr/share/node-managers/
 git clone --depth 1 "https://github.com/devenvmgr/express-cors-api" "/usr/share/webapps/expressjs"
 [ -f "/usr/share/webapps/expressjs/.env.sample" ] && cp "/usr/share/webapps/expressjs/.env.sample" "/usr/share/webapps/expressjs/.env"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# setup node
+[ -z "$(command -v fnm 2>/dev/null)" ] && echo "Failed to install fnm" && exit 1 || fnm use --install-if-missing ${NODE_VERSION:-latest}
+[ -z "$(command -v node -v 2>/dev/null)" ] && echo "failed to install node" && exit 2
+fnm -v
+node -v | grep ${NODE_VERSION:-latest}
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # End application
 # eval "$BASH_SET_SAVED_OPTIONS"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
