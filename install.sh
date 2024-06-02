@@ -63,8 +63,6 @@ mkdir -p "$CONFIG_DIR" "$INIT_DIR"
 find "$TMP_DIR/" -iname '.gitkeep' -exec rm -f {} \;
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # custom pre execution commands
-[ -f "$TMP_DIR/config/bashrc" ] && mv -fv "$TMP_DIR/config/bashrc" "$HOME/.bashrc"
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 get_dir_list="$(__find_directory_relative "$TMP_DIR/config" || false)"
 if [ -n "$get_dir_list" ]; then
   for dir in $get_dir_list; do
@@ -140,6 +138,8 @@ fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 git clone --depth 1 "https://github.com/devenvmgr/express-cors-api" "/usr/share/webapps/expressjs"
 [ -f "/usr/share/webapps/expressjs/.env.sample" ] && cp "/usr/share/webapps/expressjs/.env.sample" "/usr/share/webapps/expressjs/.env"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+[ -f "$TMP_DIR/config/bashrc" ] && mv -fv "$TMP_DIR/config/bashrc" "$HOME/.bashrc"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # End application
 # eval "$BASH_SET_SAVED_OPTIONS"
