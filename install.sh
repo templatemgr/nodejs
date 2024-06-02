@@ -131,6 +131,7 @@ fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # setup node
 [ -z "$(command -v node -v 2>/dev/null)" ] && echo "failed to install node" && exit 2 || node -v | grep ${NODE_VERSION:-latest}
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 git clone --depth 1 "https://github.com/devenvmgr/express-cors-api" "/usr/share/webapps/expressjs"
 [ -f "/usr/share/webapps/expressjs/.env.sample" ] && cp "/usr/share/webapps/expressjs/.env.sample" "/usr/share/webapps/expressjs/.env"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
