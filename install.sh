@@ -114,8 +114,6 @@ if [ -n "$CONFIG_CHECK_FILE" ] && [ ! -f "$CONFIG_DIR/$CONFIG_CHECK_FILE" ]; the
 fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # custom operations
-[ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 echo NODE_MANAGER: $NODE_MANAGER
 echo NODE_VERSION: $NODE_VERSION
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -123,7 +121,7 @@ echo NODE_VERSION: $NODE_VERSION
 if [ "$NODE_MANAGER" = "fnm" ]; then
   curl -fsSL "https://fnm.vercel.app/install" | bash -s -- --install-dir "/usr/share/node-managers/fnm" --skip-shell
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  [ -z "$(command -v fnm 2>/dev/null)" ] && fnm use --install-if-missing ${NODE_VERSION:-latest} && fnm -v && eval "$(fnm env)" || { echo "Failed to install fnm" && exit 1; }
+  [ -z "$(command -v fnm 2>/dev/null)" ] && fnm -v && eval "$(fnm env)" && fnm use --install-if-missing ${NODE_VERSION:-latest} || { echo "Failed to install fnm" && exit 1; }
 elif [ "$NODE_MANAGER" = "nvs" ]; then
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   git clone --depth 1 "https://github.com/jasongin/nvs" "/usr/share/node-managers/nvs"
