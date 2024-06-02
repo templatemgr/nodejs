@@ -54,8 +54,8 @@ else
   pkmgr update && pkmgr install nodejs npm
 fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-[ -n "$(command -v npm 2>/dev/null)" ] && true || { echo "Can not find npm" && exit 5; }
-[ -n "$(command -v node 2>/dev/null)" ] && true || { echo "Can not find node" && exit 6; }
+[ -n "$(command -v npm 2>/dev/null)" ] || { echo "Can not find npm" && exit 5; }
+[ -n "$(command -v node 2>/dev/null)" ] || { echo "Can not find node" && exit 6; }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Figure out directory
 [ -n "$SCRIPT" ] && [ -f "$SCRIPT" ] && SCRIPT="$(realpath "$SCRIPT")" && cd "$(dirname "$SCRIPT")" ||
@@ -73,6 +73,11 @@ fi
   { [ -f "./src/server.js" ] && SCRIPT="./src/server.js"; } ||
   { [ -f "./src/index.js" ] && SCRIPT="./src/index.js"; } ||
   [ -f "./package.json" ] || { echo "Can not find a package.json in $PWD" && exit 1; }
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+BASE_DIR="$(dirname "$SCRIPT")"
+if [ -n "$BASE_DIR" ] && [ -d "$BASE_DIR/.git" ]; then
+  [ -n "$(command -v git 2>/dev/null)" ] && git -C "$BASE_DIR" pull -q && echo "Updated git repo: $BASE_DIR"
+fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 echo "Node version is $(node -v | sed 's|^v||g')"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
