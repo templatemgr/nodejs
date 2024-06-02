@@ -142,8 +142,8 @@ echo NODE_MANAGER: $NODE_MANAGER
 echo NODE_VERSION: $NODE_VERSION
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 cat <<EOF | tee /etc/node/init_node.sh
-export NODE_MANAGER="\$NODE_MANAGER" 
-export NODE_VERSION="\$NODE_VERSION"
+export NODE_MANAGER="$NODE_MANAGER" 
+export NODE_VERSION="$NODE_VERSION"
 if [ "\$NODE_MANAGER" = "fnm" ] && [ -n "\$(command -v fnm 2>/dev/null)" ]; then 
   fnm use --install-if-missing \$NODE_VERSION && fnm default \$NODE_VERSION
   eval "\$(fnm env)" && eval "\$(fnm env --use-on-cd)" 
