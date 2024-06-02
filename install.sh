@@ -142,8 +142,8 @@ echo NODE_MANAGER: $NODE_MANAGER
 echo NODE_VERSION: $NODE_VERSION
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 cat <<EOF >"/etc/node/.env"
-[ -n "\$NODE_MANAGER" ] || NODE_MANAGER="\$NODE_MANAGER" 
-[ -n "\$NODE_VERSION" ] || NODE_VERSION="\$NODE_VERSION" 
+[ -n "\$NODE_MANAGER" ] || export NODE_MANAGER="\$NODE_MANAGER" 
+[ -n "\$NODE_VERSION" ] || export NODE_VERSION="\$NODE_VERSION" 
 
 EOF
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
