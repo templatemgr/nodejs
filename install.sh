@@ -124,6 +124,7 @@ if [ "$NODE_MANAGER" = "fnm" ]; then
   /tmp/install-fnm --skip-shell --install-dir "/usr/share/node-managers/fnm" && rm -Rf "/tmp/install-fnm"
   [ -f "/usr/share/node-managers/fnm/fnm" ] && export PATH="/usr/share/node-managers/fnm:$PATH" && chmod +x "/usr/share/node-managers/fnm/fnm" && ln -sf "/usr/share/node-managers/fnm/fnm" "/usr/bin/fnm"
   [ -n "$(command -v fnm 2>/dev/null)" ] && eval "$(fnm env)" || { echo "Failed to install fnm" && exit 1; }
+  fnm use --install-if-missing $NODE_VERSION && fnm default $NODE_VERSION
 else
   export NODE_MANAGER="system"
   export NODE_VERSION="system"
