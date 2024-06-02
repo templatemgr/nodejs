@@ -115,8 +115,8 @@ fi
 [ -d "/etc/node" ] || mkdir -p /etc/node
 [ -f "/etc/node/.env" ] && rm -Rf "/etc/node/.env"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-echo NODE_MANAGER=\"$NODE_MANAGER\" >>"/etc/node/.env"
-echo NODE_VERSION=\"$NODE_VERSION\" >>"/etc/node/.env"
+echo '[ -n "$NODE_MANAGER" ] || NODE_MANAGER="'$NODE_MANAGER'"' >>"/etc/node/.env"
+echo '[ -n "$NODE_VERSION" ] || NODE_VERSION="'$NODE_VERSION'"' >>"/etc/node/.env"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Install fnm
 echo NODE_MANAGER: $NODE_MANAGER
