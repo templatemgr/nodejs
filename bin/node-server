@@ -38,7 +38,7 @@ __cmd_exists() { which $1 >/dev/null 2>&1 || return 1; }
 __function_exists() { builtin type $1 >/dev/null 2>&1 || return 1; }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # custom functions
-
+[ -f "/etc/node/.env" ] && . "/etc/node/.env"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Define Variables
 NODE_SERVER_EXIT_STATUS=0

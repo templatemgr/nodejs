@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+[ -f "/etc/node/.env" ] && . "/etc/node/.env"
 [ -n "$NODE_MANAGER" ] || NODE_MANAGER="fnm"
 [ -n "$NODE_VERSION" ] || NODE_VERSION="18"
 if [ "$NODE_MANAGER" = "fnm" ] && [ -d "/usr/share/node-managers/fnm" ]; then

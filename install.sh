@@ -114,10 +114,16 @@ if [ -n "$CONFIG_CHECK_FILE" ] && [ ! -f "$CONFIG_DIR/$CONFIG_CHECK_FILE" ]; the
 fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # custom operations
+[ -d "/etc/node" ] || mkdir -p /etc/node
+[ -f "/etc/node/.env" ] && rm -Rf "/etc/node/.env"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+echo NODE_MANAGER=\"$NODE_MANAGER\" >>"/etc/node/.env"
+echo NODE_VERSION=\"$NODE_VERSION\" >>"/etc/node/.env"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Install fnm
 echo NODE_MANAGER: $NODE_MANAGER
 echo NODE_VERSION: $NODE_VERSION
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Install fnm
 if [ "$NODE_MANAGER" = "fnm" ]; then
   curl -fsSL "https://fnm.vercel.app/install" | bash -s -- --install-dir "/usr/share/node-managers/fnm" --skip-shell
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
