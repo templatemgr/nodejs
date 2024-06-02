@@ -26,7 +26,7 @@
 # shellcheck disable=SC2317
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # BASH_SET_SAVED_OPTIONS=$(set +o)
-[ "$DEBUGGER" = "on" ] && echo "Enabling debugging" && set -x
+[ "$DEBUGGER" = "on" ] && echo "Enabling debugging" && set -x || set +x
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set default exit code
 INSTALL_SH_EXIT_STATUS=0
