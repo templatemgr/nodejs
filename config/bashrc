@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-[ -f "/etc/node/.env" ] && . "/etc/node/.env"
+[ -f /etc/node/init_node.sh ] && . /etc/node/init_node.sh
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 [ -n "$NODE_MANAGER" ] || export NODE_MANAGER="fnm"
 [ -n "$NODE_VERSION" ] || export NODE_VERSION="22"

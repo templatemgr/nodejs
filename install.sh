@@ -116,14 +116,14 @@ NODE_MANAGER="${NODE_MANAGER:-fnm}"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # custom operations
 [ -d "/etc/node" ] || mkdir -p /etc/node
-[ -f "/etc/node/.env" ] && rm -Rf "/etc/node/.env"
+[ -f /etc/node/init_node.sh ] && rm -Rf /etc/node/init_node.sh
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Install fnm
 if [ "$NODE_MANAGER" = "fnm" ]; then
   curl -q -LSsf "https://fnm.vercel.app/install" -o /tmp/install-fnm && chmod 755 /tmp/install-fnm
   /tmp/install-fnm --skip-shell --install-dir "/usr/share/node-managers/fnm" && rm -Rf "/tmp/install-fnm"
   [ -f "/usr/share/node-managers/fnm/fnm" ] && export PATH="/usr/share/node-managers/fnm:$PATH" && chmod +x "/usr/share/node-managers/fnm/fnm" && ln -sf "/usr/share/node-managers/fnm/fnm" "/usr/bin/fnm"
-  [ -n "$(command -v fnm 2>/dev/null)" ] && eval "$(fnm env)" && fnm use --install-if-missing $NODE_VERSION && fnm default $NODE_VERSION || { echo "Failed to install fnm" && exit 1; }
+  [ -n "$(command -v fnm 2>/dev/null)" ] && eval "$(fnm env)" || { echo "Failed to install fnm" && exit 1; }
 else
   export NODE_MANAGER="system"
   export NODE_VERSION="system"
@@ -141,11 +141,13 @@ git clone --depth 1 "https://github.com/devenvmgr/express-cors-api" "/usr/share/
 echo NODE_MANAGER: $NODE_MANAGER
 echo NODE_VERSION: $NODE_VERSION
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-cat <<EOF | tee "/etc/node/.env"
+cat <<EOF | tee /etc/node/init_node.sh
 export NODE_MANAGER="\$NODE_MANAGER" 
 export NODE_VERSION="\$NODE_VERSION"
 if [ "\$NODE_MANAGER" = "fnm" ] && [ -n "\$(command -v fnm 2>/dev/null)" ]; then 
-  eval "\$(fnm env)" && eval "\$(fnm env --use-on-cd)"
+  fnm use --install-if-missing \$NODE_VERSION && fnm default \$NODE_VERSION
+  eval "\$(fnm env)" && eval "\$(fnm env --use-on-cd)" 
+  echo "Node version is \$(node -v | sed 's|^v||g')"
 fi
 EOF
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
