@@ -79,6 +79,10 @@ if [ -n "$BASE_DIR" ] && [ -d "$BASE_DIR/.git" ]; then
   [ -n "$(command -v git 2>/dev/null)" ] && git -C "$BASE_DIR" pull -q && echo "Updated git repo: $BASE_DIR"
 fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if [ -d "$BASE_DIR/node_modules" ]; then
+  rm -Rf "$BASE_DIR/node_modules"
+fi
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 echo "Node version is $(node -v | sed 's|^v||g')"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 [ -f "./package.json" ] && npm i -D >/dev/null && npm i -g nodemon >/dev/null
