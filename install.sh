@@ -143,8 +143,10 @@ echo NODE_VERSION: $NODE_VERSION
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 cat <<EOF | tee "/etc/node/.env"
 export NODE_MANAGER="\$NODE_MANAGER" 
-export NODE_VERSION="\$NODE_VERSION" 
-
+export NODE_VERSION="\$NODE_VERSION"
+if [ "\$NODE_MANAGER" = "fnm" ] && [ -n "\$(command -v fnm 2>/dev/null)" ]; then 
+  eval "\$(fnm env)" && eval "\$(fnm env --use-on-cd)"
+fi
 EOF
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 [ -d "/root/.local/state/fnm_multishells" ] && rm -Rf "/root/.local/state/fnm_multishells"
