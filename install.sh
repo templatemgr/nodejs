@@ -121,6 +121,7 @@ echo NODE_VERSION: $NODE_VERSION
 if [ "$NODE_MANAGER" = "fnm" ]; then
   curl -fsSL "https://fnm.vercel.app/install" | bash -s -- --install-dir "/usr/share/node-managers/fnm" --skip-shell
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  export PATH="/usr/share/node-managers/fnm:$PATH"
   [ -z "$(command -v fnm 2>/dev/null)" ] && fnm -v && eval "$(fnm env)" && fnm use --install-if-missing ${NODE_VERSION:-latest} || { echo "Failed to install fnm" && exit 1; }
 elif [ "$NODE_MANAGER" = "nvs" ]; then
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

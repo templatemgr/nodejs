@@ -2,7 +2,7 @@
 [ -n "$NODE_MANAGER" ] || NODE_MANAGER="fnm"
 [ -n "$NODE_VERSION" ] || NODE_VERSION="18"
 if [ "$NODE_MANAGER" = "fnm" ] && [ -d "/usr/share/node-managers/fnm" ]; then
-  PATH="/usr/share/node-managers/fnm:$PATH"
+  export PATH="/usr/share/node-managers/fnm:$PATH"
   eval "$(fnm env)" && eval "$(fnm env --use-on-cd)"
   fnm use --install-if-missing $NODE_VERSION && fnm use $NODE_VERSION
   [ -n "$(command -v node 2>/dev/null)" ] && true
