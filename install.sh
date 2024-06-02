@@ -128,10 +128,8 @@ else
   export NODE_MANAGER="system"
   export NODE_VERSION="system"
   pkmgr update && pkmgr install nodejs
+  [ -z "$(command -v node -v 2>/dev/null)" ] && echo "failed to install node" && exit 2 || echo "Node version is $(node -v | sed 's|^v||g')"
 fi
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# setup node
-[ -z "$(command -v node -v 2>/dev/null)" ] && echo "failed to install node" && exit 2 || echo "Node version is $(node -v | sed 's|^v||g')"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 git clone --depth 1 "https://github.com/devenvmgr/express-cors-api" "/usr/share/webapps/expressjs"
 [ -f "/usr/share/webapps/expressjs/.env.sample" ] && cp "/usr/share/webapps/expressjs/.env.sample" "/usr/share/webapps/expressjs/.env" || true
