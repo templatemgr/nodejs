@@ -42,18 +42,12 @@ __function_exists() { builtin type $1 >/dev/null 2>&1 || return 1; }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Define Variables
 NODE_SERVER_EXIT_STATUS=0
-[ -n "$NODE_MANAGER" ] || NODE_MANAGER="fnm"
-[ -n "$NODE_VERSION" ] || NODE_VERSION="18"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main application
-if [ "$NODE_MANAGER" = "fnm" ] && [ -d "/usr/share/node-managers/fnm" ]; then
-  PATH="/usr/share/node-managers/fnm:$PATH"
+if [ "$NODE_MANAGER" = "fnm" ] && [ -n "$(command -v fnm 2>/dev/null)" ]; then
   eval "$(fnm env)" && eval "$(fnm env --use-on-cd)"
-  fnm use --install-if-missing $NODE_VERSION && fnm use $NODE_VERSION
+  fnm use --install-if-missing $NODE_VERSION
   [ -n "$(command -v node 2>/dev/null)" ] && true
-elif [ "$NODE_MANAGER" = "nvs" ] && [ -d "/usr/share/node-managers/nvs" ]; then
-  . "/usr/share/node-managers/nvs/nvs.sh"
-  nvs add $NODE_VERSION && nvs use $NODE_VERSION
 else
   export NODE_MANAGER="system"
   pkmgr update && pkmgr install nodejs
@@ -66,7 +60,9 @@ fi
   { cd "/usr/share/webapps/expressjs" || false; } || exit 1
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load dotenv file
-[ -f "$PWD/.env" ] && . "$PWD/.env" || { [ -f "$PWD/.env.dev" ] && . "$PWD/.env.dev"; }
+[ -f "$PWD/.env" ] && . "$PWD/.env" ||
+  { [ -f "$PWD/.env.dev" ] && . "$PWD/.env.dev"; } ||
+  { [ -f "$PWD/.env.prod" ] && . "$PWD/.env.prod"; }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Find script
 { [ -f "./app.js" ] && SCRIPT="./app.js"; } ||
@@ -75,11 +71,10 @@ fi
   { [ -f "./src/index.js" ] && SCRIPT="./src/index.js"; } ||
   [ -f "./package.json" ] || { echo "Can not find a package.json in $PWD" && exit 1; }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-[ -f "./package.json" ] && npm i -D
-npm i -g nodemon
-nodemon $SCRIPT
+echo "Node version is $(node -v | sed 's|^v||g')"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-node "$SCRIPT"
+[ -f "./package.json" ] && npm i -D >/dev/null && npm i -g nodemon >/dev/null
+[ -n "$(command -v nodemon 2>/dev/null)" ] && nodemon $SCRIPT || node "$SCRIPT" || NODE_SERVER_EXIT_STATUS=10
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # End application
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

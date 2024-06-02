@@ -111,15 +111,12 @@ if [ -n "$CONFIG_CHECK_FILE" ] && [ ! -f "$CONFIG_DIR/$CONFIG_CHECK_FILE" ]; the
   INSTALL_SH_EXIT_STATUS=1
 fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+NODE_VERSION="${NODE_VERSION:-22}"
+NODE_MANAGER="${NODE_MANAGER:-fnm}"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # custom operations
 [ -d "/etc/node" ] || mkdir -p /etc/node
 [ -f "/etc/node/.env" ] && rm -Rf "/etc/node/.env"
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-cat <<EOF >"/etc/node/.env"
-[ -n "\$NODE_MANAGER" ] || NODE_MANAGER="\$NODE_MANAGER" 
-[ -n "\$NODE_VERSION" ] || NODE_VERSION="\$NODE_VERSION" 
-
-EOF
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Install fnm
 echo NODE_MANAGER: $NODE_MANAGER
@@ -129,19 +126,27 @@ if [ "$NODE_MANAGER" = "fnm" ]; then
   curl -q -LSsf "https://fnm.vercel.app/install" -o /tmp/install-fnm && chmod 755 /tmp/install-fnm
   /tmp/install-fnm --skip-shell --install-dir "/usr/share/node-managers/fnm" && rm -Rf "/tmp/install-fnm"
   [ -f "/usr/share/node-managers/fnm/fnm" ] && export PATH="/usr/share/node-managers/fnm:$PATH" && chmod +x "/usr/share/node-managers/fnm/fnm" && ln -sf "/usr/share/node-managers/fnm/fnm" "/usr/bin/fnm"
-  [ -n "$(command -v fnm 2>/dev/null)" ] && eval "$(fnm env)" && fnm use --install-if-missing ${NODE_VERSION:-latest} || { echo "Failed to install fnm" && exit 1; }
-elif [ "$NODE_MANAGER" = "nvs" ]; then
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  git clone --depth 1 "https://github.com/jasongin/nvs" "/usr/share/node-managers/nvs"
+  [ -n "$(command -v fnm 2>/dev/null)" ] && eval "$(fnm env)" && fnm use --install-if-missing $NODE_VERSION && fnm default $NODE_VERSION || { echo "Failed to install fnm" && exit 1; }
+  [ -d "/root/.local/state/fnm_multishells" ] && rm -Rf "/root/.local/state/fnm_multishells"
+else
+  export NODE_MANAGER="system"
+  export NODE_VERSION="system"
+  pkmgr update && pkmgr install nodejs
 fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # setup node
-[ -z "$(command -v node -v 2>/dev/null)" ] && echo "failed to install node" && exit 2 || node -v | grep ${NODE_VERSION:-latest}
+[ -z "$(command -v node -v 2>/dev/null)" ] && echo "failed to install node" && exit 2 || echo "Node version is $(node -v | sed 's|^v||g')"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 git clone --depth 1 "https://github.com/devenvmgr/express-cors-api" "/usr/share/webapps/expressjs"
 [ -f "/usr/share/webapps/expressjs/.env.sample" ] && cp "/usr/share/webapps/expressjs/.env.sample" "/usr/share/webapps/expressjs/.env"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 [ -f "$TMP_DIR/config/bashrc" ] && mv -fv "$TMP_DIR/config/bashrc" "$HOME/.bashrc"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+cat <<EOF >"/etc/node/.env"
+[ -n "\$NODE_MANAGER" ] || NODE_MANAGER="\$NODE_MANAGER" 
+[ -n "\$NODE_VERSION" ] || NODE_VERSION="\$NODE_VERSION" 
+
+EOF
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # End application
 # eval "$BASH_SET_SAVED_OPTIONS"
